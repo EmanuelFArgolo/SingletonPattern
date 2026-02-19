@@ -2,17 +2,22 @@ package com.es2.singleton;
 
 public class Registry {
 
+    private static volatile Registry instance;
+
     private String path;
     private String connectionString;
 
     private Registry() { }
 
-    private static class Holder {
-        private static final Registry INSTANCE = new Registry();
-    }
-
     public static Registry getInstance() {
-        return Holder.INSTANCE;
+        if (instance == null) {
+            synchronized (Registry.class) {
+                if (instance == null) {
+                    instance = new Registry();
+                }
+            }
+        }
+        return instance;
     }
 
     public String getPath() {
@@ -20,7 +25,7 @@ public class Registry {
     }
 
     public void setPath(String path) {
-        this.path = path; // deixa aceitar null, a não ser que o enunciado diga o contrário
+        this.path = path;
     }
 
     public String getConnectionString() {
@@ -28,6 +33,6 @@ public class Registry {
     }
 
     public void setConnectionString(String connectionString) {
-        this.connectionString = connectionString; // idem
+        this.connectionString = connectionString;
     }
 }
